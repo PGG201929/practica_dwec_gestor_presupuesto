@@ -41,32 +41,38 @@ function listarGastos(){
 
 function anyadirGasto(paramGasto){
     paramGasto.id= idGasto;
-    idGasto++; 
+
     gastos.push(paramGasto);
+    idGasto++; 
 }
 
 function borrarGasto(id){
-    gastos.splice(id, 1);
-    if(idGasto > 0){
-        idGasto = idGasto - 1;
+
+    if(gastos.includes(id, 0)){
+        gastos.splice(id, 1);
+        idGasto = gastos.length;
     }
 }
 
 function calcularTotalGastos(){
-    let totalGastos = 0;
-    for(let i=0; i < gastos.length;i++){
-        totalGastos += parseInt(gastos[i]);
+    let totalGastos = 0n;
+    let i;
+
+    if(gastos.length != 0){
+        for(i=0; i < gastos.length;i++){
+            totalGastos +=  BigInt(parseInt(gastos[i].valor));
+        }
     }
 
     return(totalGastos);
 }
 
 function calcularBalance(){
-    let tG;
-    let balance;
+    let tG = 0n;
+    let balance = 0n;
 
     tG = calcularTotalGastos();
-    balance = presupuesto - tG;
+    balance = BigInt(presupuesto) - tG;
 
     return(balance);
 }
@@ -107,10 +113,10 @@ function CrearGasto(descrip,cantid, fec, ...etiq) {
     //métodos práctica 2
     this.mostrarGastoCompleto = function(){      
         this.mostrarGasto();
-        console.log("Fecha: " + this.fecha);
-        console.log("Etiquetas:");
+        console.log("\n" + "Fecha: " + this.fecha.toLocaleString());
+        console.log("\n" + "Etiquetas:");
         for(let i = 0;i < this.etiquetas.length; i++){
-            console.log("- " + this.etiquetas[i]);
+            console.log("\n" + "- " + this.etiquetas[i]);
         }
     }
     
@@ -120,39 +126,33 @@ function CrearGasto(descrip,cantid, fec, ...etiq) {
         if(data != NaN){
             this.fecha = data;
         }
-
-
     }
     
     this.anyadirEtiquetas = function(...argumentos){
-        for(let i = 0; i < this.etiquetas.length; i++){
-            if(this.etiquetas.includes(argumentos[i], 0)){
-                gastos.push(argumentos[i]);
-                idGasto++;
+        for(let i = 0; i < argumentos.length; i++){
+            if(!(this.etiquetas.includes(argumentos[i], 0))){               
+                this.etiquetas.push(argumentos[i]);
             }  
         }
     }
     
     this.borrarEtiquetas = function(...argumen){
-        let entrada;
+        let entrada, i;
     
-        for(let i = 0; i < this.etiquetas.length; i++){
+        for(i = 0; i < argumen.length; i++){
             if(this.etiquetas.includes(argumen[i], 0)){
                 entrada = this.etiquetas.indexOf(argumen[i],0);
                 this.etiquetas.splice(entrada, 1); 
-                idGasto--;
             }  
         }
     } 
-
-
 
     if(fec){
         this.actualizarFecha(fec);
     }
 
     if(etiq){
-        this.anyadirEtiquetas(etiq);
+        this.anyadirEtiquetas(...etiq);
     }
 
 }
