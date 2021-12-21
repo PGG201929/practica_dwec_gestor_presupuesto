@@ -47,10 +47,12 @@ function anyadirGasto(paramGasto){
 }
 
 function borrarGasto(id){
-
-    if(gastos.includes(id, 0)){
-        gastos.splice(id, 1);
-        idGasto = gastos.length;
+    if((id<gastos.length) && (id> (-gastos.length)))
+    {
+        if(gastos.includes(id, 0)){
+            gastos.splice(id, 1);
+            //idGasto = gastos.length;
+        }
     }
 }
 
@@ -85,7 +87,7 @@ function CrearGasto(descrip,cantid, fec, ...etiq) {
     this.descripcion= descrip;
     this.valor = 0;
     this.etiquetas = [];
-    this.fecha = new Date().getTime();
+    this.fecha = Date.now();
 
 
     if(cantid >= 0)
@@ -123,7 +125,7 @@ function CrearGasto(descrip,cantid, fec, ...etiq) {
     this.actualizarFecha = function(paramFecha){
         let data = Date.parse(paramFecha);
 
-        if(data != NaN){
+        if(data){
             this.fecha = data;
         }
     }
